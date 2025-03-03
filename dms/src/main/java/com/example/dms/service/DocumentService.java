@@ -32,6 +32,7 @@ public class DocumentService {
             document.setTitle(updatedDocument.getTitle());
             document.setDescription(updatedDocument.getDescription());
             document.setStatus(updatedDocument.getStatus());
+            document.setOwner(updatedDocument.getOwner());
             return documentRepository.save(document);
         }).orElseThrow(() -> new RuntimeException("Документ не найден"));
     }

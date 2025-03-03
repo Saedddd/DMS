@@ -29,8 +29,9 @@ public class UserService {
 
     public User updateUser(UUID id, User updatedUser) {
         return userRepository.findById(id).map(user -> {
-            user.setUsername(updatedUser.getUsername());
             user.setEmail(updatedUser.getEmail());
+            user.setDateOfBirth(updatedUser.getDateOfBirth());
+            user.setFullName(updatedUser.getFullName());
             return userRepository.save(user);
         }).orElseThrow(() -> new RuntimeException("Пользователь не найден"));
     }

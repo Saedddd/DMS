@@ -1,9 +1,11 @@
 package com.example.dms.controller;
 
+import com.example.dms.dtos.CommentDto;
 import com.example.dms.model.Comment;
 import com.example.dms.service.CommentService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -20,8 +22,13 @@ public class CommentController {
         return commentService.getCommentsByDocumentId(documentId);
     }
 
+    @GetMapping("/document/{id}")
+    public Optional<Comment> getCommentId(@PathVariable UUID id) {
+        return commentService.getCommentById(id);
+    }
+
     @PostMapping
-    public Comment createComment(@RequestBody Comment comment) {
+    public Comment createComment(@RequestBody CommentDto comment) {
         return commentService.createComment(comment);
     }
 
