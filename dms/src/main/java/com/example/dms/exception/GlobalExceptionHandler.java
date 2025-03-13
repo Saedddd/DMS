@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.slf4j.MDC;
 
 @ControllerAdvice
 @Slf4j
@@ -83,15 +86,45 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        log.error("Unexpected error occurred", ex);
-        return new ResponseEntity<>(
-            new ErrorResponse(
-                "INTERNAL_SERVER_ERROR",
-                "An unexpected error occurred. Please try again later.",
-                LocalDateTime.now()
-            ),
-            HttpStatus.INTERNAL_SERVER_ERROR
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, WebRequest request) {
+        String requestUri = ((ServletWebRequest) request).getRequest().getRequestURI();
+        
+        MDC.put("path", requestUri);
+        MDC.put("errorType", "INTERNAL_SERVER_ERROR");
+        
+        log.error("Unhandled exception occurred: {}", ex.getMessage(), ex);
+        
+        MDC.clear();
+
+        ErrorResponse errorResponse = new ErrorResponse(
+            "INTERNAL_SERVER_ERROR",
+            "An unexpected error occurred",
+            LocalDateTime.now()
         );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
+            ResourceNotFoundException ex, 
+            WebRequest request) {
+        String requestUri = ((ServletWebRequest) request).getRequest().getRequestURI();
+        
+        MDC.put("path", requestUri);
+        MDC.put("errorType", "NOT_FOUND");
+        
+        log.warn("Resource not found: {}", ex.getMessage());
+        
+        MDC.clear();
+
+        ErrorResponse errorResponse = new ErrorResponse(
+            "NOT_FOUND",
+            ex.getMessage(),
+            LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 } 
