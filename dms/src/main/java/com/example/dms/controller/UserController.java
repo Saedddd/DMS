@@ -6,6 +6,8 @@ import com.example.dms.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.example.dms.model.Views;
 
 @RestController
 @RequestMapping("/users")
@@ -17,6 +19,7 @@ public class UserController {
     }
 
     @GetMapping
+    @JsonView(Views.Basic.class)
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -27,11 +30,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @JsonView(Views.Detailed.class)
     public User getUserById(@PathVariable UUID id) {
         return userService.getUserById(id);
     }
 
     @PostMapping
+    @JsonView(Views.Detailed.class)
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
