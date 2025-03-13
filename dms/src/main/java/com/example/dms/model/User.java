@@ -28,5 +28,9 @@ public class User {
     @Column(nullable = true)
     private Date dateOfBirth;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
 }
 

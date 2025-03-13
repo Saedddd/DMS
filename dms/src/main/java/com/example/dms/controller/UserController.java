@@ -1,5 +1,6 @@
 package com.example.dms.controller;
 
+import com.example.dms.model.Role;
 import com.example.dms.model.User;
 import com.example.dms.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,11 @@ public class UserController {
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/roles")
+    public List<Role> getAllRoles(){
+        return userService.getAllRoles();
     }
 
     @GetMapping("/{id}")
