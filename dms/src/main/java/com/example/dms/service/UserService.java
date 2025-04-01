@@ -1,5 +1,6 @@
 package com.example.dms.service;
 
+import com.example.dms.exception.UserNotFoundException;
 import com.example.dms.model.Role;
 import com.example.dms.model.User;
 import com.example.dms.repository.RoleRepository;
@@ -28,7 +29,7 @@ public class UserService {
 
     public User getUserById(UUID id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public User createUser(User user) {

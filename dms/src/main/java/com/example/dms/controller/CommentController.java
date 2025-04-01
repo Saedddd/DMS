@@ -3,18 +3,18 @@ package com.example.dms.controller;
 import com.example.dms.dtos.CommentDto;
 import com.example.dms.model.Comment;
 import com.example.dms.service.CommentService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.example.dms.exception.CommentNotFoundException;
 import com.example.dms.exception.InvalidOperationException;
-import com.example.dms.views.Views;
+import com.example.dms.model.Views;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.validation.annotation.NotNull;
 
 @RestController
 @RequestMapping("/comments")

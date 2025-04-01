@@ -1,5 +1,6 @@
 package com.example.dms.model;
 
+import com.example.dms.serialization.InstantSerializer;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

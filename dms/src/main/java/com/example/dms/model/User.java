@@ -1,5 +1,7 @@
 package com.example.dms.model;
 
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -33,13 +35,13 @@ public class User {
 
     @JsonView(Views.Detailed.class)
     @JsonSerialize(using = DateSerializer.class)
-    @JsonDeserialize(using = DateDeserializer.class)
+    @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
     @Column(nullable = true)
     private Date dateOfBirth;
 
     @JsonView(Views.Internal.class)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id", nullable = true)
     private Role role;
 
 }
