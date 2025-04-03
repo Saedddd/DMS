@@ -1,5 +1,7 @@
 package com.example.dms.model;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,6 +27,7 @@ public class Document {
     private UUID id;
 
     @JsonView(Views.Basic.class)
+    @NotBlank(message = "Title is required")
     @Column(nullable = false)
     private String title;
 
@@ -33,6 +36,7 @@ public class Document {
     private String description;
 
     @JsonView(Views.Detailed.class)
+    @NotNull(message = "Status is required")
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
@@ -50,6 +54,7 @@ public class Document {
     private Instant updatedAt;
 
     @JsonView(Views.Detailed.class)
+    @NotNull(message = "Owner is required")
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;

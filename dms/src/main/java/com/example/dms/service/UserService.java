@@ -6,10 +6,12 @@ import com.example.dms.model.User;
 import com.example.dms.repository.RoleRepository;
 import com.example.dms.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -32,10 +34,19 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
+    public List<User> searchUsers(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+        return userRepository.findByFullNameContainingIgnoreCaseOrEmailContainingIgnoreCase(query, query);
+    }
+
+    @Transactional
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
+    @Transactional
     public User updateUser(UUID id, User updatedUser) {
         return userRepository.findById(id).map(user -> {
             user.setEmail(updatedUser.getEmail());
@@ -43,9 +54,10 @@ public class UserService {
             user.setFullName(updatedUser.getFullName());
             user.setRole(updatedUser.getRole());
             return userRepository.save(user);
-        }).orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        }).orElseThrow(() -> new UserNotFoundException(id));
     }
 
+    @Transactional
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
     }

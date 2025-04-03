@@ -5,6 +5,7 @@ import com.example.dms.model.Comment;
 import com.example.dms.service.CommentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,12 +43,17 @@ public class CommentController {
             .orElseThrow(() -> new CommentNotFoundException(id));
     }
 
+    @GetMapping("/search")
+    @JsonView(Views.Detailed.class)
+    public ResponseEntity<List<Comment>> searchComments(
+            @RequestParam @Size(min = 2, message = "Search query must be at least 2 characters long") String query) {
+        List<Comment> comments = commentService.searchComments(query);
+        return ResponseEntity.ok(comments);
+    }
+
     @PostMapping
     @JsonView(Views.Detailed.class)
     public ResponseEntity<Comment> createComment(@Valid @RequestBody CommentDto commentDto) {
-        if (commentDto.getText() == null || commentDto.getText().trim().isEmpty()) {
-            throw new InvalidOperationException("Comment text cannot be empty");
-        }
         Comment savedComment = commentService.createComment(commentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedComment);
     }

@@ -2,6 +2,8 @@ package com.example.dms.model;
 
 import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
@@ -24,19 +26,23 @@ public class Attachment {
     private UUID id;
 
     @JsonView(Views.Basic.class)
+    @NotBlank(message = "File name is required")
     @Column(nullable = false)
     private String fileName;
 
     @JsonView(Views.Internal.class)
+    @NotBlank(message = "File path is required")
     @Column(nullable = false)
     private String filePath;
 
     @JsonView(Views.Detailed.class)
+    @NotNull(message = "Document is required")
     @ManyToOne
     @JoinColumn(name = "document_id", nullable = false)
     private Document document;
 
     @JsonView(Views.Detailed.class)
+    @NotNull(message = "Uploader is required")
     @ManyToOne
     @JoinColumn(name = "uploaded_by", nullable = false)
     private User uploadedBy;

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -13,12 +14,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Разрешить всем доступ
-                )
-                .csrf(csrf -> csrf.disable()) // Отключить CSRF-защиту (если нужно)
-                .formLogin(login -> login.disable()) // Отключить форму входа
-                .httpBasic(basic -> basic.disable()); // Отключить Basic Auth
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for REST API
+                .authorizeHttpRequests(authorize -> authorize
+                        // Swagger UI
+                        .requestMatchers("/swagger-ui/**",
+                                         "/swagger-ui.html", 
+                                         "/v3/api-docs/**",
+                                         "/api-docs/**").permitAll()
+                        // Actuator endpoints
+                        .requestMatchers("/actuator/**").permitAll()
+                        // All other requests
+                        .anyRequest().permitAll()
+                );
 
         return http.build();
     }

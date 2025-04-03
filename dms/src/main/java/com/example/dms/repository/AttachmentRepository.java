@@ -11,5 +11,7 @@ import java.util.UUID;
 
 public interface AttachmentRepository extends JpaRepository<Attachment, UUID> {
     List<Attachment> findByDocumentId(UUID documentId);
+    
+    List<Attachment> findByFileNameContainingIgnoreCase(String fileName);
 }
 

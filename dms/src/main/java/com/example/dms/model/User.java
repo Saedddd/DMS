@@ -3,6 +3,8 @@ package com.example.dms.model;
 import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -26,10 +28,13 @@ public class User {
     private UUID id;
 
     @JsonView(Views.Basic.class)
+    @NotBlank(message = "Full name is required")
     @Column(nullable = false)
     private String fullName;
 
     @JsonView(Views.Detailed.class)
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     @Column(nullable = false, unique = true)
     private String email;
 
