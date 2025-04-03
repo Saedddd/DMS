@@ -1,6 +1,6 @@
 package com.example.dms.model;
 
-import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
+import com.example.dms.serialization.InstantSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

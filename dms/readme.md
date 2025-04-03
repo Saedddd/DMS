@@ -1,13 +1,67 @@
-1. To test the setup:
-curl http://localhost:8080/actuator/health
-curl http://localhost:8080/actuator/metrics
-curl http://localhost:8080/actuator/loggers
+# Document Management System (DMS)
 
-2. Access Actuator endpoints:
-curl http://localhost:8080/actuator/metrics/dms.documents.created
+Система управления документами для организации и отслеживания документов, с функциями комментирования и уведомлений.
 
-3. Check metrics for a specific counter:
-curl http://localhost:8080/actuator/metrics/dms.documents.created
+## Требования
 
-4. Trigger a 500 error and check logs:
-tail -f logs/app.log
+- Java 17+
+- Maven или Gradle
+
+## Особенности SQLite
+
+Проект настроен для использования встроенной базы данных SQLite, которая не требует дополнительной установки и настройки серверной части. База данных хранится в файле `dms.db` в корневой директории проекта.
+
+## Настройка проекта
+
+1. Клонируйте репозиторий
+2. Проверьте и, при необходимости, отредактируйте настройки соединения в файле `src/main/resources/application.properties`.
+   Основные параметры:
+   - `spring.datasource.url` - URL подключения к SQLite (например, `jdbc:sqlite:dms.db`)
+
+## Запуск приложения
+
+### Через Maven:
+
+```bash
+mvn spring-boot:run
+```
+
+### Через Gradle:
+
+```bash
+./gradlew bootRun
+```
+
+## Доступ к приложению
+
+После запуска приложение будет доступно по адресу:
+
+- API: http://localhost:9090/
+- Swagger UI: http://localhost:9090/swagger-ui.html
+- OpenAPI документация: http://localhost:9090/api-docs
+
+## Преимущества использования SQLite
+
+- Не требует установки сервера базы данных
+- Хранится в одном файле, который легко перемещать и делать резервные копии
+- Не требует настройки аутентификации
+- Идеально подходит для разработки и тестирования
+- Упрощает запуск и установку приложения
+
+## Переключение на другие базы данных
+
+Если в будущем потребуется использование полноценной СУБД для рабочих нагрузок, проект можно легко переключить на PostgreSQL, MySQL или SQL Server путем изменения зависимостей в `pom.xml` и настроек в `application.properties`.
+
+## Поиск и устранение неисправностей
+
+### Работа с SQLite
+
+Если вам нужно напрямую взаимодействовать с базой данных SQLite, вы можете:
+
+1. Использовать инструменты командной строки SQLite (`sqlite3 dms.db`)
+2. Использовать графические инструменты для SQLite, такие как DB Browser for SQLite
+3. Использовать JDBC-клиенты, такие как DBeaver
+
+### Логи приложения
+
+Для диагностики проблем проверьте логи приложения в `logs/app.log`
